@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@onflow/fcl": "^1.20.1",
     "@tailwindcss/vite": "^4.1.13",
     "nuxt": "^4.1.1",
     "tailwindcss": "^4.1.13",
