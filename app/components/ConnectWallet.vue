@@ -3,7 +3,7 @@
     <button
       v-if="!user.addr"
       @click="connect"
-      class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 active:scale-95 transition"
+      class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 active:scale-95 transition cursor-pointer"
     >
       Connect Wallet
     </button>
@@ -12,7 +12,7 @@
       <p class="text-sm text-gray-700">Address: {{ user.addr }}</p>
       <button
         @click="disconnect"
-        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 active:scale-95 transition"
+        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 active:scale-95 transition cursor-pointer"
       >
         Disconnect
       </button>
