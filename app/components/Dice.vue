@@ -1,6 +1,31 @@
 <template>
-  <div>
-    <div class="flex justify-around">
+  <div class="space-y-10">
+    <div class="flex flex-col items-center">
+        <span>
+            🎲 Prime Dice — a simple and exciting game on the Flow blockchain.
+        </span>
+        
+        <span>
+            The player rolls two dice 🎲 🎲
+        </span>
+
+        <span>
+            if the sum > 7 — you win ✅
+        </span>
+
+        <span>
+            if the sum <= 7 — you lose ❌
+        </span>
+
+        <span>
+            All bets 💰 and results 📜 are secured by smart contracts 🔗
+        </span>
+
+        <span>
+            ensuring fairness ⚖️ and transparency 👀
+        </span>
+    </div>
+    <div class="flex justify-center space-x-20">
         <div class="flex justify-center items-center text-lg border size-24">
             {{ diceLeft }}
             </div>
