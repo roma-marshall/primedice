@@ -1,75 +1,30 @@
-# Nuxt Minimal Starter
+# Prime Dice 🎲
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Prime Dice is a simple decentralized dice game **built on Flow blockchain**.  
+Players can roll two dice and interact with smart contracts written in **Cadence** to ensure fairness and transparency.  
 
-## Setup
+## 🚀 Features
+- Provably fair dice rolls (1–6) on Flow
+- Wallet connection via [Flow FCL](https://github.com/onflow/fcl)
+- Smart contracts written in [Cadence](https://cadence-lang.org/)
+- Frontend powered by Nuxt 3 + TailwindCSS
 
-Make sure to install dependencies:
+## 📦 Tech Stack
+- **Flow Blockchain**
+- **Cadence Smart Contracts**
+- **Nuxt 3 (Vue 3)**
+- **TailwindCSS**
+- **FCL (Flow Client Library)**
 
+## 🔗 Contracts
+Smart contracts for Prime Dice are being developed in **Cadence**  
+and will be deployed soon on the Flow Testnet.
+- DiceContract: _coming soon_
+
+## 🧩 Getting Started
+Clone the repo and install dependencies:
 ```bash
-# npm
+git clone https://github.com/roma-marshall/primedice.git
+cd primedice
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
