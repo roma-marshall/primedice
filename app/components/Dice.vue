@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-10">
+  <div class="space-y-5">
     <div class="flex flex-col items-center">
         <span>
             🎲 Prime Dice — a simple and exciting game on the Flow blockchain.
@@ -25,14 +25,22 @@
             ensuring fairness ⚖️ and transparency 👀
         </span>
     </div>
+
+    <div class="flex flex-col items-center h-10">
+        <span v-if="result" class="text-xl font-semibold">
+            {{ result }}
+        </span>
+    </div>
+
     <div class="flex justify-center space-x-20">
         <div class="flex justify-center items-center text-lg border size-24">
             {{ diceLeft }}
-            </div>
+        </div>
         <div class="flex justify-center items-center text-lg border size-24">
             {{ diceRight }}
         </div>
     </div>
+
     <div v-if="user.addr" class="flex flex-col items-center space-y-4">
         <span>Place your bet (min bet 1 $FLOW)</span>
         <div class="flex space-x-4">
@@ -50,13 +58,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const oppLeft = ref(1)
+const oppRight = ref(1)
 const diceLeft = ref(1)
 const diceRight = ref(1)
+const result = ref("")
 const bet = ref(1)
 const { user } = useUser()
 
 const roll = () => {
     diceLeft.value = Math.floor(Math.random() * 6) + 1
     diceRight.value = Math.floor(Math.random() * 6) + 1
+
+    oppLeft.value = Math.floor(Math.random() * 6) + 1
+    oppRight.value = Math.floor(Math.random() * 6) + 1
+
+    const mySum = diceLeft.value + diceRight.value
+    const oppSum = oppLeft.value + oppRight.value
+
+    if (mySum > oppSum) {
+        result.value = "✅ You win!"
+    } else if (mySum < oppSum) {
+        result.value = "❌ Opponent wins!"
+    } else {
+        result.value = "🤝 Draw!"
+    }
 }
 </script>
