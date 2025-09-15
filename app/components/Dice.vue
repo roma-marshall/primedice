@@ -57,31 +57,85 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import * as fcl from "@onflow/fcl"
 
 const oppLeft = ref(1)
 const oppRight = ref(1)
 const diceLeft = ref(1)
 const diceRight = ref(1)
-const result = ref("")
+// const result = ref("")
 const bet = ref(1)
 const { user } = useUser()
 
-const roll = () => {
-    diceLeft.value = Math.floor(Math.random() * 6) + 1
-    diceRight.value = Math.floor(Math.random() * 6) + 1
+// const roll = () => {
+//     diceLeft.value = Math.floor(Math.random() * 6) + 1
+//     diceRight.value = Math.floor(Math.random() * 6) + 1
 
-    oppLeft.value = Math.floor(Math.random() * 6) + 1
-    oppRight.value = Math.floor(Math.random() * 6) + 1
+//     oppLeft.value = Math.floor(Math.random() * 6) + 1
+//     oppRight.value = Math.floor(Math.random() * 6) + 1
 
-    const mySum = diceLeft.value + diceRight.value
-    const oppSum = oppLeft.value + oppRight.value
+//     const mySum = diceLeft.value + diceRight.value
+//     const oppSum = oppLeft.value + oppRight.value
 
-    if (mySum > oppSum) {
-        result.value = "✅ You win!"
-    } else if (mySum < oppSum) {
-        result.value = "❌ Opponent wins!"
+//     if (mySum > oppSum) {
+//         result.value = "✅ You win!"
+//     } else if (mySum < oppSum) {
+//         result.value = "❌ Opponent wins!"
+//     } else {
+//         result.value = "🤝 Draw!"
+//     }
+// }
+
+
+const result = ref<number | null>(null)
+const loading = ref(false)
+
+const roll = async () => {
+  try {
+    loading.value = true
+    result.value = null
+
+    const txId = await fcl.mutate({
+        cadence: `
+            import DiceVRF from 0xf4a03341c4a71870
+
+            transaction {
+            prepare(acct: &Account) {}
+            execute {
+                let result = DiceVRF.roll()
+                log(result)
+            }
+            }
+        `,
+        proposer: fcl.authz as any,
+        payer: fcl.authz as any,
+        authorizations: [fcl.authz as any],
+        limit: 50,
+    })
+
+    const txResult = await fcl.tx(txId).onceSealed();
+    const logs = txResult.events.filter(event => event.type === "flow.Log").map(event => event.data.message);
+
+    console.log(logs);
+    console.log("Tx sent:", txId)
+
+    const sealed = await fcl.tx(txId).onceSealed()
+    console.log("Tx sealed:", sealed)
+
+    const diceEvent = sealed.events.find(
+      (e: any) => e.type.includes("DiceVRF.DiceRolled")
+    )
+
+    if (diceEvent) {
+      result.value = diceEvent.data.result
     } else {
-        result.value = "🤝 Draw!"
+      console.warn("No dice result found in events")
+    }
+
+    } catch (e) {
+        console.error("Error rolling dice:", e)
+    } finally {
+        loading.value = false
     }
 }
 </script>

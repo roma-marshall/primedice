@@ -1,0 +1,28 @@
+{
+	"contracts": {
+		"DiceVRF": "./flow/cadence/contracts/DiceVRF.cdc"
+	},
+	"networks": {
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"my-account": {
+			"address": "0693efaf4c5912ce",
+			"key": {
+				"type": "file",
+				"location": "my-account.pkey"
+			}
+		},
+		"testnet-account": {
+			"address": "0xf4a03341c4a71870",
+			"key": "${PRIVATE_KEY}"
+		}
+	},
+	"deployments": {
+		"testnet": {
+			"testnet-account": [
+				"DiceVRF"
+			]
+		}
+	}
+}
