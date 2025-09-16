@@ -19,8 +19,8 @@
     </div>
 
     <div class="flex flex-col items-center h-10">
-      <span v-if="result" class="text-xl font-semibold">
-        {{ result }}
+      <span v-if="resultDice" class="text-xl font-semibold">
+        {{ resultDice }}
       </span>
     </div>
 
@@ -62,28 +62,28 @@ const oppLeft = ref(1);
 const oppRight = ref(1);
 const diceLeft = ref(1);
 const diceRight = ref(1);
-// const result = ref("")
+const resultDice = ref("");
 const bet = ref(1);
 const { user } = useUser();
 
-// const roll = () => {
-//     diceLeft.value = Math.floor(Math.random() * 6) + 1
-//     diceRight.value = Math.floor(Math.random() * 6) + 1
+const rollDice = () => {
+  diceLeft.value = Math.floor(Math.random() * 6) + 1;
+  diceRight.value = Math.floor(Math.random() * 6) + 1;
 
-//     oppLeft.value = Math.floor(Math.random() * 6) + 1
-//     oppRight.value = Math.floor(Math.random() * 6) + 1
+  oppLeft.value = Math.floor(Math.random() * 6) + 1;
+  oppRight.value = Math.floor(Math.random() * 6) + 1;
 
-//     const mySum = diceLeft.value + diceRight.value
-//     const oppSum = oppLeft.value + oppRight.value
+  const mySum = diceLeft.value + diceRight.value;
+  const oppSum = oppLeft.value + oppRight.value;
 
-//     if (mySum > oppSum) {
-//         result.value = "✅ You win!"
-//     } else if (mySum < oppSum) {
-//         result.value = "❌ Opponent wins!"
-//     } else {
-//         result.value = "🤝 Draw!"
-//     }
-// }
+  if (mySum > oppSum) {
+    resultDice.value = "✅ You win!";
+  } else if (mySum < oppSum) {
+    resultDice.value = "❌ Opponent wins!";
+  } else {
+    resultDice.value = "🤝 Draw!";
+  }
+};
 
 const result = ref<number | null>(null);
 const loading = ref(false);
@@ -111,6 +111,8 @@ const roll = async () => {
       limit: 50,
     });
 
+    resultDice.value = "🔄️ Loading transaction...";
+
     const txResult = await fcl.tx(txId).onceSealed();
     const logs = txResult.events
       .filter((event) => event.type === "flow.Log")
@@ -130,6 +132,7 @@ const roll = async () => {
       result.value = diceEvent.data.result;
     } else {
       console.warn("No dice result found in events");
+      rollDice();
     }
   } catch (e) {
     console.error("Error rolling dice:", e);
