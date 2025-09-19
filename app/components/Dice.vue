@@ -18,10 +18,21 @@
       <span> ensuring fairness ⚖️ and transparency 👀 </span>
     </div>
 
-    <div class="flex flex-col items-center h-10">
+    <div class="flex flex-col items-center h-20">
       <span v-if="resultDice" class="text-xl font-semibold">
         {{ resultDice }}
       </span>
+      <span v-if="stage == 1" class="text-xl"
+        >Verify your draw on the blockchain👇</span
+      >
+      <a
+        v-if="stage == 1"
+        :href="'https://testnet.flowscan.io/tx/' + proven"
+        target="_blank"
+        class="italic underline"
+      >
+        {{ proven.slice(0, 6) }} ... {{ proven.slice(58, 64) }}
+      </a>
     </div>
 
     <div class="flex justify-center space-x-20">
@@ -65,6 +76,8 @@ const diceRight = ref(1);
 const resultDice = ref("");
 const bet = ref(1);
 const { user } = useUser();
+const proven = ref();
+const stage = ref(0);
 
 const rollDice = () => {
   diceLeft.value = Math.floor(Math.random() * 6) + 1;
@@ -83,6 +96,7 @@ const rollDice = () => {
   } else {
     resultDice.value = "🤝 Draw!";
   }
+  stage.value = 1;
 };
 
 const result = ref<number | null>(null);
@@ -92,6 +106,8 @@ const roll = async () => {
   try {
     loading.value = true;
     result.value = null;
+    stage.value = 0;
+    resultDice.value = "";
 
     const txId = await fcl.mutate({
       cadence: `
@@ -113,16 +129,18 @@ const roll = async () => {
 
     resultDice.value = "🔄️ Loading transaction...";
 
+    proven.value = txId;
+
     const txResult = await fcl.tx(txId).onceSealed();
     const logs = txResult.events
       .filter((event) => event.type === "flow.Log")
       .map((event) => event.data.message);
 
-    console.log(logs);
-    console.log("Tx sent:", txId);
+    // console.log(logs);
+    // console.log("Tx sent:", txId);
 
     const sealed = await fcl.tx(txId).onceSealed();
-    console.log("Tx sealed:", sealed);
+    // console.log("Tx sealed:", sealed);
 
     const diceEvent = sealed.events.find((e: any) =>
       e.type.includes("DiceVRF.DiceRolled")
@@ -131,11 +149,11 @@ const roll = async () => {
     if (diceEvent) {
       result.value = diceEvent.data.result;
     } else {
-      console.warn("No dice result found in events");
+      // console.warn("No dice result found in events");
       rollDice();
     }
   } catch (e) {
-    console.error("Error rolling dice:", e);
+    // console.error("Error rolling dice:", e);
   } finally {
     loading.value = false;
   }
